@@ -8,8 +8,8 @@ const SECRET = process.env.SECRET || 'bigSecret';
 
 const userModel = (sequelize, DataTypes) => {
   const model = sequelize.define('Users', {
-    username: { type: DataTypes.STRING, required: true, unique: true },
-    password: { type: DataTypes.STRING, required: true },
+    username: { type: DataTypes.STRING, required: true, unique: true, allowNull: false },
+    password: { type: DataTypes.STRING, required: true, allowNull: false},
     favorites: { type: DataTypes.ARRAY(DataTypes.INTEGER), required: false},
     role: { type: DataTypes.ENUM('user', 'mod', 'admin'), required: true, defaultValue: 'user' },
     token: {
