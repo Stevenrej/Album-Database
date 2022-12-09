@@ -6,6 +6,7 @@ const basicAuth = require('../middleware/basic');
 const bearerAuth = require('../middleware/bearer');
 const roleAuth = require('../middleware/acl');
 
+const { favorites } = require('../models/index');
 const { users } = require('../models/index');
 
 userRoute.post('/signup', async (req, res, next) => {
@@ -50,6 +51,31 @@ userRoute.get('/users', bearerAuth, roleAuth('delete'), async (req, res, next) =
   } catch (e) {
     console.log(e);
   }
+});
+
+
+userRoute.get('/favorites/:id', basicAuth, roleAuth('read'), async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const favAlbum = await users.findOne({
+      where: { id },
+      include: favorites,
+    });
+    res.status(200).send(favAlbum);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+
+
+userRoute.post('/favorites/:id', basicAuth, roleAuth('read'), async (req, res, next) => {
+  const id = req.params.id;
+  const favUserId = await users.findOne({
+    where: { id },
+  });
+  let newFav = await favorites.create(favUserId);
+  res.status(200).send(newFav);
 });
 
 
