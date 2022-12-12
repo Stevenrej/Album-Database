@@ -11,13 +11,14 @@ const sequelize = new Sequelize(DATABASE_URL);
 
 const modelUser = userModel(sequelize, DataTypes);
 const modelFavorites = favoritesModel(sequelize, DataTypes);
+const modelAlbum = albumModel(sequelize, DataTypes);
 
-modelUser.hasMany(modelFavorites);
-modelFavorites.belongsTo(modelUser);
+modelUser.belongsToMany(modelAlbum, { through: modelFavorites, uniqueKey: 'userUnique' });
+modelAlbum.belongsToMany(modelUser, { through: modelFavorites, uniqueKey: 'albumUnique' });
 
 module.exports = {
   db: sequelize,
   users: modelUser,
-  album: albumModel(sequelize, DataTypes),
+  Album: modelAlbum,
   favorites: modelFavorites,
 };
