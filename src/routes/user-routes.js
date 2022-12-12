@@ -1,10 +1,10 @@
-"use strict";
+'use strict';
 
-const express = require("express");
+const express = require('express');
 const userRoute = express.Router();
-const basicAuth = require("../middleware/basic");
-const bearerAuth = require("../middleware/bearer");
-const roleAuth = require("../middleware/acl");
+const basicAuth = require('../middleware/basic');
+const bearerAuth = require('../middleware/bearer');
+const roleAuth = require('../middleware/acl');
 
 const { favorites } = require('../models/index');
 const { users } = require('../models/index');
@@ -13,7 +13,7 @@ const { Album } = require('../models/index');
 
 
 
-userRoute.post("/signup", async (req, res, next) => {
+userRoute.post('/signup', async (req, res, next) => {
   try {
     let userData = await users.create(req.body);
     const output = {
@@ -26,7 +26,7 @@ userRoute.post("/signup", async (req, res, next) => {
   }
 });
 
-userRoute.post("/signin", basicAuth, (req, res, next) => {
+userRoute.post('/signin', basicAuth, (req, res, next) => {
   const user = {
     user: req.user,
     token: req.user.token,
@@ -35,9 +35,9 @@ userRoute.post("/signin", basicAuth, (req, res, next) => {
 });
 
 userRoute.put(
-  "/users/:id",
+  '/users/:id',
   bearerAuth,
-  roleAuth("update"),
+  roleAuth('update'),
   async (req, res, next) => {
     try {
       const id = parseInt(req.params.id);
@@ -48,13 +48,13 @@ userRoute.put(
     } catch (e) {
       console.log(e);
     }
-  }
+  },
 );
 
 userRoute.get(
-  "/users",
+  '/users',
   bearerAuth,
-  roleAuth("delete"),
+  roleAuth('delete'),
   async (req, res, next) => {
     try {
       const userData = await users.findAll({});
@@ -63,8 +63,8 @@ userRoute.get(
     } catch (e) {
       console.log(e);
     }
-  }
-});
+  },
+);
 
 
 userRoute.post('/favorites/:id', bearerAuth, roleAuth('read'), async (req, res, next) => {
