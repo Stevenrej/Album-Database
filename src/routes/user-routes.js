@@ -72,6 +72,21 @@ userRoute.post('/favorites/:id', bearerAuth, roleAuth('read'), async (req, res, 
   }
 });
 
+userRoute.post('/favorites/:id/:albumId', bearerAuth, roleAuth('read'), async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const albumId = req.params.albumId;
+    const userData = await users.findOne({ where: { id } });
+    const albumData = await Album.findOne({ where: { id: albumId } });
+    const favAlbum = await userData.addAlbum(albumData);
+    console.log(favAlbum);
+
+    res.status(200).send(favAlbum);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
 userRoute.get('/favorites', bearerAuth, roleAuth('create'), async (req, res, next) => {
   try {
     console.log(favorites);
